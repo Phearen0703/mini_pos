@@ -1,4 +1,20 @@
-.navbar-nav .nav-item:hover{
-    background-color: aquamarine !important;
+.navbar-nav .nav-item:hover:not(.navActive){
+    background-color: rgb(106, 106, 250) !important;
+   
+}
+.navbar-nav .nav-item:hover a{
+    color: white !important;
+   
+}
+
+.navbar-nav .nav-item {
+    padding: 2px 20px;
+}
+.navActive{
+    background-color: blue !important;
+    
+    
+}
+.navActive a{
     color: white !important;
 }
