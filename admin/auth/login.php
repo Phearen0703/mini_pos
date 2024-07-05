@@ -4,7 +4,7 @@
 
 <?php include($_SERVER['DOCUMENT_ROOT']."/mini_pos/admin/layouts/header.php");
 
-    if($_SESSION['login']=true){
+    if($_SESSION['login']==true){
         header('Location:' .$burl .'/admin/index.php');
     }
 ?>
