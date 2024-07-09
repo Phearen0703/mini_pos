@@ -24,6 +24,7 @@ if (isset($_POST['name']) && isset($_FILES['photo'])) {
             $photo = $conn->query("SELECT photo FROM customers WHERE id = '$customer_id'");
     
             $photo = $photo->fetch_object()->photo;
+            
     
             if(file_exists($_SERVER['DOCUMENT_ROOT'] . $photo)){
                 unlink($_SERVER['DOCUMENT_ROOT'] . $photo);
