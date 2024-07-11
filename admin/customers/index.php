@@ -7,23 +7,40 @@
 <?php include($_SERVER['DOCUMENT_ROOT']."/mini_pos/admin/layouts/header.php");?>
 <?php include($_SERVER['DOCUMENT_ROOT']."/mini_pos/admin/layouts/nav.php");?>
 <?php
+
     $per_page = 100;
     $page = isset($_GET['page']) ? $_GET['page'] : 1;
-
     $start_page = ($page - 1) * $per_page;
 
-    $CountCustomer = $conn ->query("SELECT COUNT(*) AS total from customers")->fetch_object();
-
-    $totalPage = round($CountCustomer->total / $per_page);
+    $CountCustomer = 0;
+    $totalPage = 0;
+    $search = "";
+    $orderBy = isset($_GET['orderBy']) ? $_GET['orderBy'] : 'ASC';
+   
 
 
     $customer = '';	
-    if(isset($_GET["search"])){
+    if(isset($_GET["search"]) && $_GET['search'] != ''){
         $search = $_GET['search'];
-        $customers = $conn -> query("SELECT * FROM customers WHERE name LIKE = '% $search %' Limit $per_page OFFSET $start_page");
+
+      
+    
+        $CountCustomer = $conn ->query("SELECT COUNT(*) AS total from customers WHERE name LIKE '%$search%' ORDER BY name $orderBy")->fetch_object();
+    
+        $totalPage = round($CountCustomer->total / $per_page);
+
+        $customers = $conn -> query("SELECT * FROM customers WHERE name LIKE '%$search%' ORDER BY name $orderBy Limit $per_page OFFSET $start_page");
+
     }else{
-     $customers = $conn -> query("SELECT * FROM customers Limit $per_page OFFSET $start_page");
+       
+        $CountCustomer = $conn ->query("SELECT COUNT(*) AS total from customers")->fetch_object();
+    
+        $totalPage = round($CountCustomer->total / $per_page);
+
+        $customers = $conn -> query("SELECT * FROM customers ORDER BY name $orderBy Limit $per_page OFFSET $start_page");
     }
+
+    $orderBy = isset($_GET['orderBy']) ? ($_GET['orderBy'] == 'ASC' ? 'DESC' : 'ASC') : 'ASC';
  
 
    
@@ -49,7 +66,7 @@
                 <div class="mb-2 col-4 float-end">
                     <div class="input-group">
                         <input type="hidden" name="page" value="<?php echo $page ?>">
-                        <input type="search" name="search" class="form-control">
+                        <input type="search" name="search" class="form-control" value="<?php echo $search; ?>">
                         <button type="submit" class="btn btn-primary">Search</button>
                     </div>
                 </div>
@@ -60,7 +77,7 @@
                     <tr>
                         <th>#</th>
                         <th>Photo</th>
-                        <th>Name</th>
+                        <th>Name<a href="<?php echo $burl . '/admin/customers/index.php?search=' .$search . '&orderBy=' . $orderBy; ?>" class="sort float-end mx-3"><i class="fa-solid fa-sort"></i></a></th>
                         <th>Action</th>
                     </tr>
                 </thead>
