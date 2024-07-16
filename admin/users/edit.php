@@ -37,8 +37,12 @@
                     <input type="text" id="username" name="username" class="form-control" value="<?php echo $user -> username ?>">
                 </div>
                 <div class="mb-3">
-                    <label for="password">Password</label>
-                    <input type="password" id="password" name="password" class="form-control">
+                    <label for="old_password">Old Password</label>
+                    <input type="old_password" id="old_password" name="old_password" class="form-control">
+                </div>
+                <div class="mb-3">
+                    <label for="new_password">New Password</label>
+                    <input type="new_password" id="new_password" name="new_password" class="form-control">
                 </div>
                 
                 <div class="mb-3">

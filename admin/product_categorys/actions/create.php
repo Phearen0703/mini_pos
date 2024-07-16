@@ -14,10 +14,10 @@ if(isset($_POST['name']) && isset($_FILES['photo'])){
     
     }else{
        
-       $path = "/mini_pos/admin/assets/images/customers/" . time() . $photo['name'];
+       $path = "/mini_pos/admin/assets/images/" . time() . $photo['name'];
        move_uploaded_file( $photo['tmp_name'], $_SERVER["DOCUMENT_ROOT"] . $path);
 
-       $conn->query("INSERT INTO customers(name, photo) VALUE('$name','$path')");
+       $conn->query("INSERT INTO product_categories(name, photo) VALUE('$name','$path')");
 
        $_SESSION['message']=[
         'status'=>'success',
@@ -33,6 +33,6 @@ if(isset($_POST['name']) && isset($_FILES['photo'])){
     ];
 
 }
-header('Location:'. $burl .'/admin/customers/create.php');
+header('Location:'. $burl .'/admin/product_categorys/create.php');
 
 ?>

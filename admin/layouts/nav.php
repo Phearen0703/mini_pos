@@ -29,7 +29,7 @@
                 </li>
                 <li class="nav-item <?php echo $page == 'category' ? "navActive" : "" ?>">
                     <a class="nav-link " aria-current="page"
-                        href="<?php echo $burl . "/admin/product_category/index.php"?>"><i class="fa-solid fa-cart-flatbed-suitcase"></i> Category</a>
+                        href="<?php echo $burl . "/admin/product_categorys/index.php"?>"><i class="fa-solid fa-cart-flatbed-suitcase"></i> Category</a>
                 </li>
                 <li class="nav-item <?php echo $page == 'user' ? "navActive" : "" ?>">
                     <a class="nav-link " aria-current="page"
@@ -37,7 +37,7 @@
                 </li>
             </ul>
             <form class="d-flex">
-                <a class="btn btn-primary" href="<?php echo $burl . "/admin/auth/action_logout.php"?>">Log Out</a>
+                <a class="btn btn-primary" href="<?php echo $burl . "/admin/auth/action_logout.php"?>"><i class="fa-solid fa-right-from-bracket"></i> Log Out</a>
             </form>
         </div>
     </div>

@@ -64,6 +64,11 @@
             qty float(15,2) not null,
             total float(15,2) not null
         )";
+        const CREATE_TABLE_COMPANY = "CREATE TABLE IF NOT EXISTS company(
+            id int not null auto_increment primary key,
+            name varchar(255) not null,
+            photo varchar(255) not null
+        )";
 
         $conn->query(CREATE_TABLE_USER);
         $conn->query(CREATE_TABLE_CUSTOMERS);
@@ -71,5 +76,6 @@
         $conn->query(UPDATE_TABLE_PRODUCT);
         $conn->query(UPDATE_TABLE_PRODUCT_ORDERS);
         $conn->query(UPDATE_TABLE_PRODUCT_ORDER_DETAILS);
+        $conn->query(CREATE_TABLE_COMPANY);
 
 ?>

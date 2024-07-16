@@ -19,6 +19,7 @@
                             <h2 class="mb-0 text-center text-danger">Login</h2>
                         </div>
                         <div class="card-body">
+                        <?php include($_SERVER['DOCUMENT_ROOT']."/mini_pos/admin/layouts/sms.php");?>
                             <div class="mb-3">
                                 <label for="username">Username</label>
                                 <input type="text" name="username" id="username" class="form-control" required>

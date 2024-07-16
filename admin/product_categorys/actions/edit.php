@@ -5,7 +5,7 @@ if (isset($_POST['name']) && isset($_FILES['photo'])) {
 
     $name = $_POST['name'];
     $photo = $_FILES['photo'];
-    $customer_id = $_POST['id'];
+    $category_id = $_POST['id'];
 
     if (!$name) {
         $_SESSION['message'] = [
@@ -16,14 +16,14 @@ if (isset($_POST['name']) && isset($_FILES['photo'])) {
     } else {
 
         $path = '';
-        $customer = $conn->query("SELECT * FROM customers WHERE id = '$customer_id'")->fetch_object();
+        $category = $conn->query("SELECT * FROM product_categories WHERE id = '$category_id'")->fetch_object();
 
         if($photo['size']>0){
-            $path = "/mini_pos/admin/assets/images/customers/" . time() . $photo['name'];
+            $path = "/mini_pos/admin/assets/images/" . time() . $photo['name'];
             move_uploaded_file($photo['tmp_name'], $_SERVER["DOCUMENT_ROOT"] . $path);
     
     
-            $photo = $customer->photo;
+            $photo = $category->photo;
         
             
     
@@ -32,11 +32,11 @@ if (isset($_POST['name']) && isset($_FILES['photo'])) {
             }
            
         }else{
-            $path = $customer->photo;
+            $path = $category->photo;
         }
 
         
-        $conn->query("UPDATE customers SET name='$name',photo='$path' WHERE id ='$customer_id'");
+        $conn->query("UPDATE product_categories SET name='$name',photo='$path' WHERE id ='$category_id'");
 
         $_SESSION['message'] = [
             'status' => 'success',
@@ -52,6 +52,6 @@ if (isset($_POST['name']) && isset($_FILES['photo'])) {
         'sms' => 'Validation Error'
     ];
 }
-header('Location:' . $burl . '/admin/customers/index.php');
+header('Location:' . $burl . '/admin/product_categorys/index.php');
 
 ?>
