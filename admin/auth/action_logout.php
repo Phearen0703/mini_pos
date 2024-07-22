@@ -8,6 +8,7 @@
       ];
 
      $_SESSION['login'] = false;
+     $_SESSION['auth'] = 0;
 
      header('Location:' . $burl .'/admin/auth/login.php');
 ?>

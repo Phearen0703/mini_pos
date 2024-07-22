@@ -26,7 +26,7 @@
 
       
     
-        $CountProduct = $conn ->query("SELECT COUNT(*) AS total from products JOIN product_categories ON product.product_categories_id = product_categories.id WHERE name LIKE '%$search%' ORDER BY name $orderBy")->fetch_object();
+        $CountProduct = $conn ->query("SELECT COUNT(*) AS total from products JOIN product_categories ON product.product_category_id = product_categories.id WHERE products.name LIKE '%$search%' ORDER BY name $orderBy")->fetch_object();
     
         $totalPage = round($CountProduct->total / $per_page);
 

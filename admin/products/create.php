@@ -7,7 +7,7 @@
 <?php include($_SERVER['DOCUMENT_ROOT']."/mini_pos/admin/layouts/header.php");?>
 <?php include($_SERVER['DOCUMENT_ROOT']."/mini_pos/admin/layouts/nav.php");?>
 <?php
-    $products = $conn -> query("SELECT * FROM products");
+    $category = $conn -> query("SELECT * FROM product_categories");
    
 
 ?>
@@ -30,17 +30,21 @@
                     <input type="text" id="name" name="name" class="form-control" required>
                 </div>
                 <div class="mb-3">
-                    <label for="username">Username</label>
-                    <input type="text" id="username" name="username" class="form-control" required>
+                    <label for="product_category">Category</label>
+                    <select name="product_category" id="product_category" class="form-control" >
+                        <option selected value="">Pleas Select</option>
+                        <?php
+                            while($row = $category -> fetch_object()){ ?>
+                                <option value="<?php echo $row->id ?>"><?php echo $row->name ?></option>
+                            <?php }?> 
+                    </select>
                 </div>
                 <div class="mb-3">
-                    <label for="password">Password</label>
-                    <input type="password" id="password" name="password" class="form-control" required>
+                    <label for="price">Price</label>
+                    <input type="text" id="price" name="price" class="form-control" required>
                 </div>
-                <div class="mb-3">
-                    <label for="re-password">Re-Password</label>
-                    <input type="re-password" id="re-password" name="re-password" class="form-control" required>
-                </div>
+             
+               
                 <div class="mb-3">
                     <label for="photo">Photo</label>
                     <input type="file" accept="image/*" id="photo" name="photo" class="form-control" required>

@@ -7,9 +7,11 @@
         $username = $_POST['username'];
         $password = $_POST['password'];
 
-        $user = $conn ->query("SELECT username, password FROM users WHERE username = '$username' AND password = '$password'");
+        $user = $conn ->query("SELECT id, username, password FROM users WHERE username = '$username' AND password = '$password'");
 
-        if($user -> fetch_object()){
+        $user = $user -> fetch_object();
+
+        if($user){
         
             $_SESSION['message']=[
                 'status' => 'success',
@@ -17,6 +19,7 @@
             ];
 
             $_SESSION['login'] = true;
+            $_SESSION['auth'] = $user->id;
             header('Location:' . $burl . '/admin/index.php');
             exit();
         }
