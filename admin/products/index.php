@@ -16,7 +16,7 @@
     $totalPage = 0;
     $search = "";
     $orderBy = isset($_GET['orderBy']) ? $_GET['orderBy'] : 'ASC';
-    $keyOrder = isset($_GET['keyOrder']) ? $_GET['keyOrder'] :'name';
+    $keyOrder = isset($_GET['keyOrder']) ? $_GET['keyOrder'] :'products.name';
    
 
 
@@ -26,11 +26,16 @@
 
       
     
-        $CountProduct = $conn ->query("SELECT COUNT(*) AS total from products JOIN product_categories ON product.product_category_id = product_categories.id WHERE products.name LIKE '%$search%' ORDER BY name $orderBy")->fetch_object();
+        $CountProduct = $conn ->query("SELECT COUNT(*) AS total 
+        from products INNER JOIN product_categories ON products.product_category_id = product_categories.id INNER JOIN users ON users.id = products.create_by
+        WHERE products.name LIKE '%$search%' OR product_categories.name LIKE '%$search%'
+         ORDER BY $keyOrder $orderBy")->fetch_object();
     
         $totalPage = round($CountProduct->total / $per_page);
 
-        $products = $conn -> query("SELECT products.*,product_categories.name AS product_category_name  FROM products JOIN product_categories ON products.product_category_id = product_categories.id WHERE name LIKE '%$search%' ORDER BY name $orderBy Limit $per_page OFFSET $start_page");
+        $products = $conn -> query("SELECT products.*,product_categories.name 
+        AS product_category_name  FROM products JOIN product_categories ON products.product_category_id = product_categories.id INNER JOIN users ON users.id = products.create_by
+        WHERE products.name LIKE '%$search%' OR product_categories.name LIKE '%$search%' ORDER BY name $orderBy Limit $per_page OFFSET $start_page");
 
     }else{
        
@@ -38,7 +43,8 @@
     
         $totalPage = round($CountProduct->total / $per_page);
 
-        $products = $conn -> query("SELECT products.*,product_categories.name AS product_category_name FROM products JOIN product_categories ON products.product_category_id = product_categories.id  ORDER BY $keyOrder $orderBy Limit $per_page OFFSET $start_page");
+        $products = $conn -> query("SELECT products.*,product_categories.name 
+        AS product_category_name FROM products JOIN product_categories ON products.product_category_id = product_categories.id  ORDER BY $keyOrder $orderBy Limit $per_page OFFSET $start_page");
     }
 
     $orderBy = isset($_GET['orderBy']) ? ($_GET['orderBy'] == 'ASC' ? 'DESC' : 'ASC') : 'ASC';
