@@ -27,24 +27,22 @@
       
     
         $CountProduct = $conn ->query("SELECT COUNT(*) AS total 
-        from products INNER JOIN product_categories ON products.product_category_id = product_categories.id INNER JOIN users ON users.id = products.create_by
+        from products INNER JOIN product_categories ON products.product_category_id = product_categories.id INNER JOIN users ON users.id = products.created_by
         WHERE products.name LIKE '%$search%' OR product_categories.name LIKE '%$search%'
          ORDER BY $keyOrder $orderBy")->fetch_object();
     
         $totalPage = round($CountProduct->total / $per_page);
 
-        $products = $conn -> query("SELECT products.*,product_categories.name 
-        AS product_category_name  FROM products JOIN product_categories ON products.product_category_id = product_categories.id INNER JOIN users ON users.id = products.create_by
-        WHERE products.name LIKE '%$search%' OR product_categories.name LIKE '%$search%' ORDER BY name $orderBy Limit $per_page OFFSET $start_page");
+        $products = $conn -> query("SELECT products.*,product_categories.name AS product_category_name, users.name AS action FROM products INNER JOIN product_categories ON products.product_category_id = product_categories.id INNER JOIN users ON users.id = products.created_by
+        WHERE products.name LIKE '%$search%' OR product_categories.name LIKE '%$search%' ORDER BY $keyOrder $orderBy Limit $per_page OFFSET $start_page");
 
     }else{
        
         $CountProduct = $conn ->query("SELECT COUNT(*) AS total from products")->fetch_object();
     
         $totalPage = round($CountProduct->total / $per_page);
-
-        $products = $conn -> query("SELECT products.*,product_categories.name 
-        AS product_category_name FROM products JOIN product_categories ON products.product_category_id = product_categories.id  ORDER BY $keyOrder $orderBy Limit $per_page OFFSET $start_page");
+       
+        $products = $conn -> query("SELECT products.*,product_categories.name AS product_category_name, users.name AS action FROM products INNER JOIN product_categories ON products.product_category_id = product_categories.id INNER JOIN users ON users.id = products.created_by  ORDER BY $keyOrder $orderBy Limit $per_page OFFSET $start_page");
     }
 
     $orderBy = isset($_GET['orderBy']) ? ($_GET['orderBy'] == 'ASC' ? 'DESC' : 'ASC') : 'ASC';
@@ -85,9 +83,10 @@
                     <tr>
                         <th>#</th>
                         <th>Photo</th>
-                        <th>Category Name<a href="<?php echo $burl . '/admin/products/index.php?search=' .$search . '&orderBy=' . $orderBy .$keyOrder='.'.'product_categories.name'; ?>" class="sort float-end mx-3"><i class="fa-solid fa-sort"></i></a></th>
-                        <th>Name<a href="<?php echo $burl . '/admin/products/index.php?search=' .$$search . '&orderBy=' . $orderBy .$keyOrder='.'.'products.name'; ?>" class="sort float-end mx-3"><i class="fa-solid fa-sort"></i></a></th>
-                        <th>Price<a href="<?php echo $burl . '/admin/products/index.php?search=' .$search . '&orderBy=' . $orderBy .$keyOrder='.'.'products.price'; ?>" class="sort float-end mx-3"><i class="fa-solid fa-sort"></i></a></th>
+                        <th>Category Name<a href="<?php echo $burl . '/admin/products/index.php?search=' .$search . '&orderBy=' . $orderBy . '&keyOrder=' . 'product_category_id'; ?>" class="sort float-end mx-3"><i class="fa-solid fa-sort"></i></a></th>
+                        <th>Name<a href="<?php echo $burl . '/admin/products/index.php?search=' .$search . '&orderBy=' . $orderBy . '&keyOrder=' . 'name'; ?>" class="sort float-end mx-3"><i class="fa-solid fa-sort"></i></a></th>
+                        <th>Price<a href="<?php echo $burl . '/admin/products/index.php?search=' .$search . '&orderBy=' . $orderBy . '&keyOrder=' . 'price'; ?>" class="sort float-end mx-3"><i class="fa-solid fa-sort"></i></a></th>
+                        <th>Creat By<a href="<?php echo $burl . '/admin/products/index.php?search=' .$search . '&orderBy=' . $orderBy . '&keyOrder=' . 'created_by'; ?>" class="sort float-end mx-3"><i class="fa-solid fa-sort"></i></a></th>
                         <th>Action</th>
                     </tr>
                 </thead>
@@ -106,6 +105,7 @@
                         <td><?php echo $product->product_category_name ?></td>
                         <td><?php echo $product->name ?></td>
                         <td><?php echo $product->price ?></td>
+                        <td><?php echo $product->action  ?></td>
                         <td>
                             <a href="<?php echo $burl . "/admin/products/edit.php?product_id=" . $product->id ?>"
                                 class="btn btn-success"><i class="fa-solid fa-pen"></i> Edit</a>

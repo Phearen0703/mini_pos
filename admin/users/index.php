@@ -16,6 +16,7 @@
     $totalPage = 0;
     $search = "";
     $orderBy = isset($_GET['orderBy']) ? $_GET['orderBy'] : 'ASC';
+    $keyOrder = isset($_GET['keyOrder']) ? $_GET['keyOrder'] :'name';
    
 
 
@@ -25,11 +26,11 @@
 
       
     
-        $CounUser = $conn ->query("SELECT COUNT(*) AS total from users WHERE name LIKE '%$search%' ORDER BY name $orderBy")->fetch_object();
+        $CounUser = $conn ->query("SELECT COUNT(*) AS total from users WHERE name LIKE '%$search%' ORDER BY $keyOrder $orderBy")->fetch_object();
     
         $totalPage = round($CounUser->total / $per_page);
 
-        $users = $conn -> query("SELECT * FROM users WHERE name LIKE '%$search%' ORDER BY name $orderBy Limit $per_page OFFSET $start_page");
+        $users = $conn -> query("SELECT * FROM users WHERE name LIKE '%$search%' ORDER BY $keyOrder $orderBy Limit $per_page OFFSET $start_page");
 
     }else{
        
@@ -37,7 +38,7 @@
     
         $totalPage = round($CounUser->total / $per_page);
 
-        $users = $conn -> query("SELECT * FROM users ORDER BY name $orderBy Limit $per_page OFFSET $start_page");
+        $users = $conn -> query("SELECT * FROM users ORDER BY $keyOrder $orderBy Limit $per_page OFFSET $start_page");
     }
 
     $orderBy = isset($_GET['orderBy']) ? ($_GET['orderBy'] == 'ASC' ? 'DESC' : 'ASC') : 'ASC';
@@ -77,8 +78,8 @@
                     <tr>
                         <th>#</th>
                         <th>Photo</th>
-                        <th>Name<a href="<?php echo $burl . '/admin/users/index.php?search=' .$search . '&orderBy=' . $orderBy; ?>" class="sort float-end mx-3"><i class="fa-solid fa-sort"></i></a></th>
-                        <th>Username</th>
+                        <th>Name<a href="<?php echo $burl . '/admin/users/index.php?search=' .$search . '&orderBy=' . $orderBy . '&keyOrder=' . 'name'; ?>" class="sort float-end mx-3"><i class="fa-solid fa-sort"></i></a></th>
+                        <th>Username<a href="<?php echo $burl . '/admin/users/index.php?search=' .$search . '&orderBy=' . $orderBy . '&keyOrder=' . 'username'; ?>" class="sort float-end mx-3"><i class="fa-solid fa-sort"></i></a></th>
                         <th>Action</th>
                     </tr>
                 </thead>
