@@ -6,14 +6,34 @@
 <?php include($_SERVER['DOCUMENT_ROOT']."/mini_pos/admin/layouts/header.php");?>
 <?php include($_SERVER['DOCUMENT_ROOT']."/mini_pos/admin/layouts/nav.php");?>
 <?php 
+
     $products = $conn ->query("SELECT * FROM products");
     $customers = $conn -> query("SELECT * FROM customers");
+
+
+    if(isset($_SESSION['orders'])){
+        if(isset($_POST['customer_id']) && isset($_POST['product_id']) && isset($_POST['qty'])){
+            
+            $customer_id = $_POST['customer_id'];
+            $product_id = $_POST['product_id'];
+            $qty = $_POST['qty'];
+
+
+            $_SESSION['orders'] = array_push( $_SESSION['orders'], ['customer_id' => $customer_id, 'product_id' => $product_id, 'qty' => $qty]);
+            
+          
+        }
+    }else{
+        $_SESSION['orders'] = [];
+    }
+   
+
 ?>
 
     <div class="container py-5">
         <div class="row g-4">
             <div class="col-12">
-                <form action="">
+                <form action="<?php echo $burl . "/admin/product_order/index.php" ?>" method="POST">
                 <div class="card">
                     <div class="card-header">
                         <h3 class="mb-0"><i class="fa-solid fa-cart-plus"></i> Order</h3>
