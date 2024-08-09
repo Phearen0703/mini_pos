@@ -12,60 +12,78 @@
 
 
 
-    if (!isset($_SESSION['orders']) || !is_array($_SESSION['orders'])) {
-        $_SESSION['orders'] = [];
-    }
     
-    if (isset($_POST['customer_id']) && isset($_POST['product_id']) && isset($_POST['qty'])) {
-        $customer_id = $_POST['customer_id'];
-        $product_id = $_POST['product_id'];
-        $qty = $_POST['qty'];
-    
-        $isExist = false;
-    
-        foreach ($_SESSION['orders'] as $index => $order) {
-            if (isset($order['customer_id']) && $order['customer_id'] == $customer_id) {
-                if (!isset($_SESSION['orders'][$index]['orders']) || !is_array($_SESSION['orders'][$index]['orders'])) {
-                    $_SESSION['orders'][$index]['orders'] = [];
+
+        function findCustomerIndex($orders, $customer_id) {
+            foreach ($orders as $index => $order) {
+                if (isset($order['customer_id']) && $order['customer_id'] == $customer_id) {
+                    return $index;
                 }
-    
-                array_push($_SESSION['orders'][$index]['orders'], [
+            }
+            return -1;
+        }
+        
+        function findProductIndex($customer_orders, $product_id) {
+            foreach ($customer_orders as $index => $order) {
+                if ($order['product_id'] == $product_id) {
+                    return $index;
+                }
+            }
+            return -1;
+        }
+        
+        if (!isset($_SESSION['orders']) || !is_array($_SESSION['orders'])) {
+            $_SESSION['orders'] = [];
+        }
+        
+        if (isset($_POST['customer_id']) && isset($_POST['product_id']) && isset($_POST['qty'])) {
+            $customer_id = $_POST['customer_id'];
+            $product_id = $_POST['product_id'];
+            $qty = $_POST['qty'];
+        
+            $customerIndex = findCustomerIndex($_SESSION['orders'], $customer_id);
+        
+            if ($customerIndex >= 0) {
+                $productIndex = findProductIndex($_SESSION['orders'][$customerIndex]['orders'], $product_id);
+        
+                if ($productIndex >= 0) {
+                    // If product exists, update the quantity
+                    $_SESSION['orders'][$customerIndex]['orders'][$productIndex]['qty'] += $qty;
+                } else {
+                    // If product does not exist, add it as a new item
+                    array_push($_SESSION['orders'][$customerIndex]['orders'], [
+                        'customer_id' => $customer_id,
+                        'product_id' => $product_id,
+                        'qty' => $qty
+                    ]);
+                }
+            } else {
+                // If customer does not exist, create a new customer order
+                array_push($_SESSION['orders'], [
                     'customer_id' => $customer_id,
-                    'product_id' => $product_id,
-                    'qty' => $qty
+                    'orders' => [
+                        ['customer_id' => $customer_id, 'product_id' => $product_id, 'qty' => $qty]
+                    ]
                 ]);
-                $isExist = true;
-                break;
             }
         }
     
-        if (!$isExist) {
-            array_push($_SESSION['orders'], [
-                'customer_id' => $customer_id,
-                'orders' => [
-                    ['customer_id' => $customer_id, 'product_id' => $product_id, 'qty' => $qty]
-                ]
-            ]);
-        }
-    }
-
-
-    // add more item
-    if(isset($_POST['add_customer_id']) && isset($_POST['add_product_id'])){
+    // Add more items (increment quantity) for an existing product
+    if (isset($_POST['add_customer_id']) && isset($_POST['add_product_id'])) {
         $add_customer_id = $_POST['add_customer_id'];
         $add_product_id = $_POST['add_product_id'];
-
-        foreach ($_SESSION['orders'] as $index => $order){
-            if($order['customer_id'] == $add_customer_id){
-                   foreach($order['orders'] as $jdex => $value){
-                        if($value['product_id'] == $add_product_id){
-                            $_SESSION['orders'][$index]['orders'][$jdex]['qty']++;
-                            break;
-                        }
-                   }
-                }
+    
+        $customerIndex = findCustomerIndex($_SESSION['orders'], $add_customer_id);
+    
+        if ($customerIndex >= 0) {
+            $productIndex = findProductIndex($_SESSION['orders'][$customerIndex]['orders'], $add_product_id);
+    
+            if ($productIndex >= 0) {
+                // If product exists, increment the quantity
+                $_SESSION['orders'][$customerIndex]['orders'][$productIndex]['qty']++;
             }
         }
+    }
     
 
    
@@ -165,8 +183,13 @@
 
                                 <td class="d-flex justify-content-center">
 
+                                    <form action="<?php echo $burl . "/admin/product_order/" ?>" method="post">
+                                        <button class="btn btn-danger btn-sm mx-4">-</button>
+                                        <input type="hidden" name="decrease_customer_id" value="<?php echo $cus_id;?>">
+                                        <input type="hidden" name="decrease_product_id" value="<?php echo $product_id;?>">
 
-                                    <button class="btn btn-danger btn-sm mx-4">-</button>
+                                    </form>
+
                                      <?php echo $orderitem['qty']; ?>
                                 
                                     <form action="<?php echo $burl . "/admin/product_order/" ?>" method="post">
@@ -175,9 +198,6 @@
                                         <button class="btn btn-primary btn-sm mx-4">+</button>
                                     </form>
                                 </td>
-
-
-                                
 
 
                                 <td><?php echo ($product->price * $orderitem['qty']) ?></td>
