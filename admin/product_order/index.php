@@ -203,92 +203,106 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST') {
             
             ?>
 
-        <div class="col-12">
-            <div class="card">
-                <div class="card-header bg-success">
-                    <h2 class="mb-0 text-white">List Orders of <span
-                            class="text-warning"><?php echo $cus->name ?></span></h2>
-                </div>
-                <div class="card-body">
-                    <table class="table table-hove text-center">
-                        <thead class="table-success">
-                            <tr>
-                                <th>Accent</th>
-                                <th>#</th>
-                                <th>Item</th>
-                                <th>Price</th>
-                                <th>Qty</th>
-                                <th>Total</th>
-                                
-                            </tr>
-                        </thead>
-                        <tbody>
+        <form action="<?php echo $burl . "/admin/product_order/actions/store.php" ?>" method="post">
+                
+                <input type="hidden" name="myOrder" value='<?php echo json_encode($order); ?>'>
 
-                            <?php
+            <div class="col-12">
+                <div class="card">
+                    <div class="card-header bg-success">
+                        <h2 class="mb-0 text-white">List Orders of <span
+                                class="text-warning"><?php echo $cus->name ?></span></h2>
+                    </div>
+                    <div class="card-body">
+                        <table class="table table-hove text-center">
+                            <thead class="table-success">
+                                <tr>
+                                    <th>Accent</th>
+                                    <th>#</th>
+                                    <th>Item</th>
+                                    <th>Price</th>
+                                    <th>Qty</th>
+                                    <th>Total</th>
+
+                                </tr>
+                            </thead>
+                            <tbody>
+
+                                <?php
                            $i = 1;
+                           $grand_total = 0;
                            foreach ($order['orders'] as $key => $orderitem){?>
-                            <?php
+                                <?php
                                     $product_id = $orderitem['product_id'];
                                     $product = $conn->query("SELECT * FROM products WHERE id = '$product_id'")->fetch_object();
+                                   
                                
                                 ?>
-                            <tr>
-                            <td>
-                                <form action="<?php echo $burl . "/admin/product_order/" ?>" method="post">
+                                <tr>
+                                    <td>
+                                        <form action="<?php echo $burl . "/admin/product_order/" ?>" method="post">
                                             <input type="hidden" name="delete_customer_id"
                                                 value="<?php echo $cus_id;?>">
                                             <input type="hidden" name="delete_product_id"
                                                 value="<?php echo $product_id;?>">
-                                        <button class="btn btn-danger mx-4"><i class="fa-solid fa-trash"></i></button>
-                                </form>
-                                </td>
+                                            <button class="btn btn-danger mx-4"><i
+                                                    class="fa-solid fa-trash"></i></button>
+                                        </form>
+                                    </td>
 
-                                <td><?php echo $i ++ ?></td>
-                                <td><?php echo $product -> name ?></td>
-                                <td><?php echo $product -> price ?></td>
+                                    <td><?php echo $i ++ ?></td>
+                                    <td><?php echo $product -> name ?></td>
+                                    <td><?php echo $product -> price ?></td>
 
-                                <td>
-                                    <div class="row">
-                                        <div class="col text-end">
-                                            <form action="<?php echo $burl . "/admin/product_order/" ?>" method="post">
-                                                <button class="btn btn-danger btn-sm mx-4">-</button>
-                                                <input type="hidden" name="decrease_customer_id"
-                                                    value="<?php echo $cus_id;?>">
-                                                <input type="hidden" name="decrease_product_id"
-                                                    value="<?php echo $product_id;?>">
-                                            </form>
+                                    <td>
+                                        <div class="row">
+                                            <div class="col text-end">
+                                                <form action="<?php echo $burl . "/admin/product_order/" ?>"
+                                                    method="post">
+                                                    <button class="btn btn-danger btn-sm mx-4">-</button>
+                                                    <input type="hidden" name="decrease_customer_id"
+                                                        value="<?php echo $cus_id;?>">
+                                                    <input type="hidden" name="decrease_product_id"
+                                                        value="<?php echo $product_id;?>">
+                                                </form>
+                                            </div>
+                                            <div class="col-2"><?php echo $orderitem['qty']; ?></div>
+                                            <div class="col text-start">
+                                                <form action="<?php echo $burl . "/admin/product_order/" ?>"
+                                                    method="post">
+                                                    <input type="hidden" name="add_customer_id"
+                                                        value="<?php echo $cus_id;?>">
+                                                    <input type="hidden" name="add_product_id"
+                                                        value="<?php echo $product_id;?>">
+                                                    <button class="btn btn-primary btn-sm mx-4">+</button>
+                                                </form>
+                                            </div>
                                         </div>
-                                        <div class="col-2"><?php echo $orderitem['qty']; ?></div>
-                                        <div class="col text-start">
-                                            <form action="<?php echo $burl . "/admin/product_order/" ?>" method="post">
-                                                <input type="hidden" name="add_customer_id"
-                                                    value="<?php echo $cus_id;?>">
-                                                <input type="hidden" name="add_product_id"
-                                                    value="<?php echo $product_id;?>">
-                                                <button class="btn btn-primary btn-sm mx-4">+</button>
-                                            </form>
-                                        </div>
-                                    </div>
 
-                                </td>
+                                    </td>
 
 
-                                <td><?php echo ($product->price * $orderitem['qty']) ?></td>
-                            </tr>
+                                    <td><?php echo ($product->price * $orderitem['qty']) ?></td>
+                                </tr>
 
-                            <?php } ?>
-                            <tr>
-                                <td colspan="5" class="text-end">Grand Total</td>
-                                <td>100</td>
-                            </tr>
-                        </tbody>
-                    </table>
-                </div>
-                <div class="card-footer text-end">
-                    <button class="btn btn-warning"><i class="fa-solid fa-floppy-disk"></i> Checkout</button>
+                                <?php
+                                $grand_total += ($product->price * $orderitem['qty']);
+                            ?>
+
+                                <?php } ?>
+                                <tr>
+                                    <td colspan="5" class="text-end">Grand Total</td>
+                                    <td><?php echo $grand_total ?></td>
+                                </tr>
+                            </tbody>
+                        </table>
+                    </div>
+                    <div class="card-footer text-end">
+                        <button class="btn btn-warning"><i class="fa-solid fa-floppy-disk"></i> Checkout</button>
+                    </div>
                 </div>
             </div>
-        </div>
+        </form>
 
         <?php }  ?>
 
