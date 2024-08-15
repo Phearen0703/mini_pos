@@ -1,67 +1,65 @@
 <?php
 include($_SERVER['DOCUMENT_ROOT']."/mini_pos/config.php");
 
-    if(isset($_POST['myOrder'])){
-        $myOrder = (array) json_decode($_POST['myOrder']);
+if(isset($_POST['myOrder']) && isset($_POST['myOrderIndex'])){
 
-        $customer_id = $myOrder['customer_id'];
-        $orders = $myOrder['orders'];
+    $myOrderIndex = $_POST['myOrderIndex'];
+    $myOrder = (array) json_decode($_POST['myOrder']);
+    
+    $customer_id = $myOrder['customer_id'];
+    $orders = $myOrder['orders'];
 
-        //find grand total
+    // Calculate grand total
+    $grand_total = 0;
+    foreach ($orders as $order){
+        $order = (array) $order;
+        $product_id = $order['product_id'];
+        $product = $conn->query("SELECT * FROM products WHERE id = '$product_id'")->fetch_object();
+        $grand_total += ($product->price * $order['qty']);
+    }
 
-        $grand_total = 0;
-         foreach ($orders as $index => $order){
-            //query product detail
+    $inv_code = time();
+    $created_at = date('Y-m-d H:i:s');
+    $created_by = $_SESSION['auth'];
 
-            $order = (array) $order;
-            $product_id = $order['product_id'];
-            $product = $conn->query("SELECT * FROM products WHERE id = '$product_id'")->fetch_object();
-            $grand_total += ($product->price * $order['qty']);
-         }
-         $inv_code = time();
-         $created_at = date('Y-m-d H:i:s');
-         $created_by = $_SESSION['auth'];
+    // Insert into product_orders table
+    $product_order = $conn->query("INSERT INTO product_orders (customer_id, inv_code, grand_total, active, created_at, created_by)
+        VALUES ('$customer_id', '$inv_code', '$grand_total', '1','$created_at','$created_by')");
 
-         //insert into table product_order
-         $prodcut_order = $conn->query("INSERT INTO product_orders (customer_id, inv_code, grand_total, active, created_at, created_by)
-         VALUES ('$customer_id', '$inv_code', '$grand_total', '1','$created_at','$created_by')");
+    if ($product_order) {
+        // Retrieve the last inserted product order
+        $product_order = $conn->query("SELECT * FROM product_orders ORDER BY id DESC LIMIT 1")->fetch_object();
+        $product_order_id = $product_order->id;
 
-
-        $prodcut_order = $conn->query("SELECT * FROM product_orders ORDER BY id DESC LIMIT 1")->fetch_object();
-
-        $prodcut_order_id = $prodcut_order -> id;
-
-        //insert into tabel product_order_details
-         foreach ($order as $index => $order){
-            
-            //query product detail
+        // Insert into product_order_details table
+        foreach ($orders as $order){
             $order = (array) $order;
             $product_id = $order['product_id'];
             $qty = $order['qty'];
 
             $product = $conn->query("SELECT * FROM products WHERE id = '$product_id'")->fetch_object();
-
             $price = $product->price;
             $total = ($product->price * $order['qty']);
 
-
-
-
             $conn->query("INSERT INTO product_order_details (product_order_id, product_id, price, qty, total)
-            VALUE ('$prodcut_order_id','$product_id','$price','$qty','$total')
-            ");
-         }
+                VALUES ('$product_order_id','$product_id','$price','$qty','$total')");
+        }
 
-         $_SESSION['message'] = [
+        $customer = $conn->query("SELECT * FROM customers WHERE id = '$customer_id'")->fetch_object();
+        $_SESSION['message'] = [
             'status' => 'success',
-            'sms' => 'Order Successfully'
+            'sms' => 'Order Successfully: '.$customer->name
         ];
-
-    }else{
+        unset($_SESSION['orders'][$myOrderIndex]);
+       header("Location:". $burl. "/admin/product_order/print.php?product_order_id=" .$product_order_id);
+       exit();
+    } else {
         $_SESSION['message'] = [
             'status' => 'error',
-            'sms' => 'Something Wrong !!'
+            'sms' => 'Something went wrong !!'
         ];
-        header("Location:". $base_url. "/admin/product_order/index.php");
+       
     }
+}
+header("Location:". $burl. "/admin/product_order/index.php");
 ?>

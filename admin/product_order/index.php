@@ -147,6 +147,9 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST') {
 <div class="container py-5">
     <div class="row g-4">
         <div class="col-12">
+            <?php include($_SERVER['DOCUMENT_ROOT']."/mini_pos/admin/layouts/sms.php");?>
+        </div>
+        <div class="col-12">
             <form action="<?php echo $burl . "/admin/product_order/index.php" ?>" method="POST">
                 <div class="card">
                     <div class="card-header">
@@ -204,8 +207,9 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST') {
             ?>
 
         <form action="<?php echo $burl . "/admin/product_order/actions/store.php" ?>" method="post">
-                
-                <input type="hidden" name="myOrder" value='<?php echo json_encode($order); ?>'>
+
+            <input type="hidden" name="myOrder" value='<?php echo json_encode($order); ?>'>
+            <input type="hidden" name="myOrderIndex" value="<?php echo $index ?>">
 
             <div class="col-12">
                 <div class="card">
