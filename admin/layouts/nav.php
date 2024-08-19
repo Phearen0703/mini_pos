@@ -1,6 +1,6 @@
 <!-- for navbar -->
 
-<nav class="navbar navbar-expand-lg bg-info-subtle postition-sticky sticky-top p-0">
+<nav class="navbar navbar-expand-lg bg-info-subtle postition-sticky sticky-top p-0 d-none-print">
     <div class="container-fluid">
         <a class="navbar-brand" href="<?php echo $burl . "/admin"; ?>">
             <img src="https://upload.wikimedia.org/wikipedia/commons/thumb/4/4f/POS_Logo.svg/2560px-POS_Logo.svg.png" class="rounded-circle" style="width: 70px; hight: 70px" alt="Logo">
@@ -26,6 +26,10 @@
                 <li class="nav-item <?php echo $page == 'order' ? "navActive" : "" ?>">
                     <a class="nav-link " aria-current="page"
                         href="<?php echo $burl . "/admin/product_order/index.php"?>"><i class="fa-solid fa-cart-shopping"></i> Order</a>
+                </li>
+                <li class="nav-item <?php echo $page == 'invoice' ? "navActive" : "" ?>">
+                    <a class="nav-link " aria-current="page"
+                        href="<?php echo $burl . "/admin/invoices/index.php"?>"><i class="fa-solid fa-file-invoice"></i> Invoices</a>
                 </li>
                 <li class="nav-item <?php echo $page == 'category' ? "navActive" : "" ?>">
                     <a class="nav-link " aria-current="page"

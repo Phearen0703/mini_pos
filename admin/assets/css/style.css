@@ -22,3 +22,28 @@
     text-decoration: none !important;
     color: black !important;
 }
+
+.logo{
+    width: 50%;
+}
+.p-0-print{
+    padding: 20px;
+}
+
+@media print{
+    .logo{
+        width: 25%;
+    }
+    .zoom{
+        zoom: 0.7;
+    }
+    .d-none-print{
+        display: none;
+    }
+    .p-0-print{
+        padding: 0;
+    }
+}
+@page{
+    margin: 5px;
+}
