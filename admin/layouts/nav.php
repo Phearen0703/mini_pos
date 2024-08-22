@@ -19,6 +19,10 @@
                     <a class="nav-link " aria-current="page"
                         href="<?php echo $burl . "/admin/customers/index.php"?>"><i class="fa-solid fa-person-walking"></i> Customer</a>
                 </li>
+                <li class="nav-item <?php echo $page == 'category' ? "navActive" : "" ?>">
+                    <a class="nav-link " aria-current="page"
+                        href="<?php echo $burl . "/admin/product_categorys/index.php"?>"><i class="fa-solid fa-cart-flatbed-suitcase"></i> Category</a>
+                </li>
                 <li class="nav-item <?php echo $page == 'product' ? "navActive" : "" ?>">
                     <a class="nav-link " aria-current="page"
                         href="<?php echo $burl . "/admin/products/index.php"?>"><i class="fa-solid fa-box"></i> Product</a>
@@ -31,10 +35,11 @@
                     <a class="nav-link " aria-current="page"
                         href="<?php echo $burl . "/admin/invoices/index.php"?>"><i class="fa-solid fa-file-invoice"></i> Invoices</a>
                 </li>
-                <li class="nav-item <?php echo $page == 'category' ? "navActive" : "" ?>">
+                <li class="nav-item <?php echo $page == 'report' ? "navActive" : "" ?>">
                     <a class="nav-link " aria-current="page"
-                        href="<?php echo $burl . "/admin/product_categorys/index.php"?>"><i class="fa-solid fa-cart-flatbed-suitcase"></i> Category</a>
+                        href="<?php echo $burl . "/admin/reports/index.php"?>"><i class="fa-solid fa-file"></i> Report</a>
                 </li>
+              
                 <li class="nav-item <?php echo $page == 'user' ? "navActive" : "" ?>">
                     <a class="nav-link " aria-current="page"
                         href="<?php echo $burl . "/admin/users/index.php"?>"><i class="fa-regular fa-user"></i> Users</a>
