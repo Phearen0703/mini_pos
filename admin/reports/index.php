@@ -17,7 +17,7 @@
             </a>
         </div>
         <div class="col-lg-4 col-6 p-2">
-            <a href="<?php echo $burl . "/admin/reports/saledetal.php" ?>" class="text-white text-decoration-none text-center">
+            <a href="<?php echo $burl . "/admin/reports/sale_detail.php" ?>" class="text-white text-decoration-none text-center">
                 <div class="bg-primary p-3 rounded">
                     <h3>Sale Detail Report</h3>
                 </div>
