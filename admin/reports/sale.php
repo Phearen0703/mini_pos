@@ -12,8 +12,8 @@
 
 
     $query = "SELECT product_orders.*, customers.name as customer_name, users.name as user_name from product_orders
-                                Inner Join customers ON customers.id = product_orders.customer_id
-                                Inner Join users ON users.id = product_orders.created_by
+                                LEFT JOIN customers ON customers.id = product_orders.customer_id
+                                LEFT JOIN users ON users.id = product_orders.created_by
                                 WHERE product_orders.created_at >= '$from' and product_orders.created_at <= '$to'";
     if($customer_id){
         $query .= "AND customers.id = '$customer_id'";

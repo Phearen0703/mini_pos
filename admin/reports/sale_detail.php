@@ -12,8 +12,8 @@
 
 
     $query = "SELECT product_orders.*, customers.name as customer_name, users.name as user_name from product_orders
-                                Inner Join customers ON customers.id = product_orders.customer_id
-                                Inner Join users ON users.id = product_orders.created_by
+                                LEFT JOIN customers ON customers.id = product_orders.customer_id
+                                LEFT JOIN users ON users.id = product_orders.created_by
                                 WHERE product_orders.created_at >= '$from' and product_orders.created_at <= '$to'";
     if($customer_id){
         $query .= "AND customers.id = '$customer_id'";
@@ -80,7 +80,7 @@
                         <?php
                                     $product_order_id = $product_order->id;
                                     $details = $conn->query("SELECT product_order_details.*, products.name as product_name FROM product_order_details 
-                                    INNER JOIN products ON products.id = product_order_details.product_id
+                                    LEFT JOIN products ON products.id = product_order_details.product_id
                                     WHERE product_order_id = '$product_order_id'");
 
                                     $firstDetail = $details->fetch_object();

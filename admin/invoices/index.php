@@ -27,8 +27,8 @@
       
     
         $CountProductOrder = $conn ->query("SELECT COUNT(*) AS total FROM product_orders
-        INNER JOIN customers ON customers.id = product_orders.customer_id
-        INNER JOIN users ON users.id = product_orders.created_by
+        LEFT JOIN customers ON customers.id = product_orders.customer_id
+        LEFT JOIN users ON users.id = product_orders.created_by
         WHERE product_orders.inv_code LIKE '%$search%' OR
         customers.name LIKE '%$search%' OR
         users.name LIKE '%$search%' OR
@@ -39,8 +39,8 @@
 
        
         $productOrders = $conn -> query("SELECT product_orders.*, customers.name as customer_name, users.name as user_name FROM product_orders
-        INNER JOIN customers ON customers.id = product_orders.customer_id
-        INNER JOIN users ON users.id = product_orders.created_by
+        LEFT JOIN customers ON customers.id = product_orders.customer_id
+        LEFT JOIN users ON users.id = product_orders.created_by
         WHERE product_orders.inv_code LIKE '%$search%' OR
         customers.name LIKE '%$search%' OR
         users.name LIKE '%$search%' OR
@@ -54,8 +54,8 @@
         $totalPage = round($CountProductOrder->total / $per_page);
        
         $productOrders = $conn -> query("SELECT product_orders.*, customers.name as customer_name, users.name as user_name from product_orders
-        INNER JOIN customers ON customers.id = product_orders.customer_id
-        INNER JOIN users ON users.id = product_orders.created_by
+        LEFT JOIN customers ON customers.id = product_orders.customer_id
+        LEFT JOIN users ON users.id = product_orders.created_by
          ORDER BY $keyOrder $orderBy
         ");
 
